@@ -21,3 +21,7 @@ La subida del código no garantiza que Pages esté activado; revisar la configur
 El archivo necesita `course` y `tasks`. Cada tarea necesita `id`, `title`, `start` y `end`; fechas en formato ISO `YYYY-MM-DD`. Campos opcionales: `group`, `deadline`, `kind`, `action`, `instructions`, `original`, `instructionNote`, `where`, `materials`, `depends`, `hours` y `state`. `resources` enlaza cada recurso con su `section`.
 
 El plan del curso vive en [upf-mpc-2026](https://github.com/manueleco/upf-mpc-2026). El trabajo en grupo se gestionará en su propio repositorio.
+
+## Estados de tareas
+
+Cada tarea permite elegir **Por hacer**, **En progreso**, **Hecho** o **Por confirmar**, y filtrar por estado. Se guardan localmente en el navegador. Las marcas booleanas de versiones anteriores se interpretan como Hecho/Por hacer. Las tareas con configuración pendiente de confirmar o hitos tentativos empiezan como Por confirmar. El estado no modifica Moodle.
