@@ -25,3 +25,7 @@ El plan del curso vive en [upf-mpc-2026](https://github.com/manueleco/upf-mpc-20
 ## Estados de tareas
 
 Cada tarea permite elegir **Por hacer**, **En progreso**, **Hecho** o **Por confirmar**, y filtrar por estado. Se guardan localmente en el navegador. Las marcas booleanas de versiones anteriores se interpretan como Hecho/Por hacer. Las tareas con configuración pendiente de confirmar o hitos tentativos empiezan como Por confirmar. El estado no modifica Moodle.
+
+## Mismo plan en local y online
+
+La primera visita muestra cuatro tareas ficticias. Carga el `plan.json` del curso una vez: el navegador recuerda el plan y lo recupera en visitas posteriores. **Mostrar todas las tareas** elimina los filtros de grupo, estado y pendientes; el contador indica cuántas tareas están visibles. La página local usa la misma interfaz, con el plan completo incorporado y acceso a los archivos locales.

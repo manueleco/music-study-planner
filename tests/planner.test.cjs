@@ -55,3 +55,23 @@ assert.doesNotMatch(elements.get('tasks').innerHTML,/Finished|Uncertain|>Todo</)
 vm.runInContext('progress.S2="to_confirm"; localStorage.setItem(storageKey,JSON.stringify(progress)); load({...statusPlan,progress:undefined})',context);
 assert.equal(vm.runInContext('taskStatus(data.tasks[1])',context),'to_confirm');
 console.log('Passed: four statuses, legacy booleans, state filter and storage reload.');
+vm.runInContext('rememberPlan()', context);
+assert.equal(JSON.parse(storage.get('music-study-planner:last-plan-v1')).course, 'Status test');
+assert.equal(Object.hasOwn(JSON.parse(storage.get('music-study-planner:last-plan-v1')), 'progress'), false);
+const reopened = vm.createContext({ document, URL, Date, structuredClone,
+ localStorage: {getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)} });
+vm.runInContext(source, reopened);
+assert.equal(elements.get('course').textContent,'Status test');
+assert.equal(vm.runInContext('taskStatus(data.tasks[1])',reopened),'to_confirm');
+assert.match(elements.get('count').textContent,/4 visibles/);
+elements.get('status-filter').value='done';elements.get('status-filter').handlers.change();
+elements.get('reset-filters').handlers.click();
+assert.match(elements.get('count').textContent,/4 visibles/);
+console.log('Passed: reopening restores imported plan/progress and Show All clears every filter.');
+if(process.argv[2]){
+ reopened.input=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+ vm.runInContext('load(input)',reopened);
+ assert.equal((elements.get('tasks').innerHTML.match(/<article /g)||[]).length,reopened.input.tasks.length);
+ for(const task of reopened.input.tasks)assert.ok(elements.get('tasks').innerHTML.includes(`id="task-${task.id}"`));
+ console.log('Passed: every task in the supplied course plan is rendered.');
+}
