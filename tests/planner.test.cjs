@@ -37,3 +37,21 @@ context.bad = { course: 'Bad', tasks: [{ id: 'x', title: 'Bad', start: '2026-10-
 assert.throws(() => vm.runInContext('load(bad)', context), /fechas no válidos/);
 assert.equal(elements.get('course').textContent, 'Import test');
 console.log('Passed: import, instructions, restored progress, unsafe markup/links and invalid dates.');
+context.statusPlan = { course: 'Status test', tasks: [
+ {id:'S1',title:'Todo',start:'2026-10-12',end:'2026-10-13'},
+ {id:'S2',title:'Working',start:'2026-10-12',end:'2026-10-13'},
+ {id:'S3',title:'Finished',start:'2026-10-12',end:'2026-10-13'},
+ {id:'S4',title:'Uncertain',start:'2026-10-12',end:'2026-10-13',kind:'Configuración: confirmar'}
+], progress: {S1:false,S2:'in_progress',S3:true} };
+vm.runInContext('load(statusPlan)',context);
+assert.equal(vm.runInContext('taskStatus(data.tasks[0])',context),'todo');
+assert.equal(vm.runInContext('taskStatus(data.tasks[1])',context),'in_progress');
+assert.equal(vm.runInContext('taskStatus(data.tasks[2])',context),'done');
+assert.equal(vm.runInContext('taskStatus(data.tasks[3])',context),'to_confirm');
+elements.get('status-filter').value='in_progress';
+elements.get('status-filter').handlers.change();
+assert.match(elements.get('tasks').innerHTML,/Working/);
+assert.doesNotMatch(elements.get('tasks').innerHTML,/Finished|Uncertain|>Todo</);
+vm.runInContext('progress.S2="to_confirm"; localStorage.setItem(storageKey,JSON.stringify(progress)); load({...statusPlan,progress:undefined})',context);
+assert.equal(vm.runInContext('taskStatus(data.tasks[1])',context),'to_confirm');
+console.log('Passed: four statuses, legacy booleans, state filter and storage reload.');
