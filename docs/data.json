@@ -1,0 +1,89 @@
+{
+  "courseId": "study-planner-demo-2026",
+  "updated": "2026-10-13",
+  "course": "https://github.com/manueleco/music-study-planner",
+  "identity": {
+    "name": "Panel de seguimiento de cursos",
+    "code": "UPF · PLANTILLA REUTILIZABLE",
+    "description": "Lista, Kanban y Gantt. Carga los datos de tu curso para trabajar con sus entregas.",
+    "footer": "Datos ficticios de demostración. Los cambios se guardan en este navegador; no se envían a GitHub."
+  },
+  "resources": [],
+  "topics": [],
+  "rules": [
+    {
+      "title": "Ejemplo",
+      "detail": "Las tareas y fechas de esta pantalla son ficticias. Carga docs/data.json de tu asignatura para ver sus requisitos."
+    }
+  ],
+  "actions": [
+    "Desbloquear con la clave local del planner.",
+    "Cargar docs/data.json del curso desde la sección de carga."
+  ],
+  "tasks": [
+    {
+      "id": "demo-1",
+      "title": "Revisar lecturas",
+      "start": "2026-10-13",
+      "end": "2026-10-16",
+      "term": "Estudio",
+      "certainty": "Plan personal",
+      "detail": "Ejemplo ficticio para explorar el panel. No es una entrega real.",
+      "resources": [],
+      "where": "https://github.com/manueleco/music-study-planner",
+      "depends": [],
+      "status": "pending",
+      "notes": "",
+      "milestone": false,
+      "time": null
+    },
+    {
+      "id": "demo-2",
+      "title": "Preparar práctica",
+      "start": "2026-10-13",
+      "end": "2026-10-17",
+      "term": "Estudio",
+      "certainty": "Plan personal",
+      "detail": "Ejemplo ficticio para explorar el panel. No es una entrega real.",
+      "resources": [],
+      "where": "https://github.com/manueleco/music-study-planner",
+      "depends": [],
+      "status": "progress",
+      "notes": "",
+      "milestone": false,
+      "time": null
+    },
+    {
+      "id": "demo-3",
+      "title": "Revisar propuesta",
+      "start": "2026-10-13",
+      "end": "2026-10-18",
+      "term": "Estudio",
+      "certainty": "Plan personal",
+      "detail": "Ejemplo ficticio para explorar el panel. No es una entrega real.",
+      "resources": [],
+      "where": "https://github.com/manueleco/music-study-planner",
+      "depends": [],
+      "status": "blocked",
+      "notes": "",
+      "milestone": false,
+      "time": null
+    },
+    {
+      "id": "demo-4",
+      "title": "Organizar materiales",
+      "start": "2026-10-13",
+      "end": "2026-10-19",
+      "term": "Estudio",
+      "certainty": "Plan personal",
+      "detail": "Ejemplo ficticio para explorar el panel. No es una entrega real.",
+      "resources": [],
+      "where": "https://github.com/manueleco/music-study-planner",
+      "depends": [],
+      "status": "done",
+      "notes": "",
+      "milestone": false,
+      "time": null
+    }
+  ]
+}

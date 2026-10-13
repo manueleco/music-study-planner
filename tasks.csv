@@ -1,0 +1,5 @@
+id,title,start,end,term,certainty,status
+demo-1,Revisar lecturas,2026-10-13,2026-10-16,Estudio,Plan personal,pending
+demo-2,Preparar práctica,2026-10-13,2026-10-17,Estudio,Plan personal,progress
+demo-3,Revisar propuesta,2026-10-13,2026-10-18,Estudio,Plan personal,blocked
+demo-4,Organizar materiales,2026-10-13,2026-10-19,Estudio,Plan personal,done

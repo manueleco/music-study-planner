@@ -4,3 +4,8 @@ private/
 materiales/
 textos/
 datos-participantes/
+
+materials/private/
+ACCESS.local.txt
+*.local.json
+__pycache__/

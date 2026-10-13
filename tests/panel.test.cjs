@@ -1,0 +1,32 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),{webcrypto,createHash}=require('node:crypto');
+const source=fs.readFileSync(path.join(__dirname,'../docs/app.js'),'utf8');
+const fixture=JSON.parse(fs.readFileSync(process.argv[2]||path.join(__dirname,'../docs/data.json'),'utf8'));
+const storage=new Map();
+function boot(){const nodes=new Map();function el(id){if(!nodes.has(id))nodes.set(id,{value:['term','status'].includes(id)?'all':'',innerHTML:'',textContent:'',hidden:false,disabled:false,files:[],events:{},addEventListener(n,f){this.events[n]=f},setAttribute(){},querySelector(){return{focus(){}}},focus(){},showModal(){this.open=true},close(){this.open=false},scrollIntoView(){}});return nodes.get(id)}
+const document={getElementById:el,querySelector:()=>({}),createElement:()=>({click(){}})};
+const context=vm.createContext({document,location:{pathname:'/docs/index.html',hostname:'127.0.0.1'},window:{ACCESS_HASH:createHash('sha256').update('test-only-key').digest('hex')},crypto:webcrypto,TextEncoder,URL,Date,Blob,requestAnimationFrame:fn=>fn(),setTimeout:()=>1,clearTimeout(){},fetch:async()=>({ok:true,json:async()=>structuredClone(fixture)}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)}});
+vm.runInContext(source,context);return{context,el}}
+(async()=>{let {context,el}=boot();await new Promise(setImmediate);
+assert.equal(vm.runInContext('data.tasks.length',context),fixture.tasks.length);
+assert.equal((el('taskList').innerHTML.match(/<article /g)||[]).length,fixture.tasks.length);
+assert.equal((el('kanbanBoard').innerHTML.match(/class="kanban-column"/g)||[]).length,4);
+assert.equal(el('import').disabled,true);assert.equal(el('loadCourse').disabled,true);
+const id=fixture.tasks[0].id;context.id=id;context.change={status:'progress',start:'2026-10-13',end:'2026-10-20',notes:'Existing note'};
+assert.throws(()=>vm.runInContext('saveTask(id,change)',context),/bloqueada/);
+el('password').value='test-only-key';await el('loginForm').onsubmit({preventDefault(){}});assert.equal(el('import').disabled,false);
+vm.runInContext('saveTask(id,change)',context);
+context.event={target:{closest:()=>({dataset:{status:id},value:'done'})}};vm.runInContext('changeStatus(event)',context);
+const saved=vm.runInContext('allTasks().find(t=>t.id===id)',context);assert.equal(saved.status,'done');assert.equal(saved.notes,'Existing note');assert.equal(saved.start,'2026-10-13');assert.equal(saved.end,'2026-10-20');assert.equal(vm.runInContext('data.tasks.find(t=>t.id===id).start',context),fixture.tasks[0].start);
+assert.ok(el('chart').innerHTML.includes('track done'));
+const next=el('next').textContent;el('search').value='no match whatsoever';el('search').events.input();assert.equal((el('kanbanBoard').innerHTML.match(/kanban-empty/g)||[]).length,4);assert.equal(el('next').textContent,next);assert.ok(el('count').textContent.startsWith('0 tareas'));
+el('showAll').onclick();assert.equal((el('taskList').innerHTML.match(/<article /g)||[]).length,fixture.tasks.length);
+const before=[...storage.entries()];context.bad={version:1,courseId:fixture.courseId,overrides:{[id]:{status:'done',start:'2026-02-30',end:'2026-03-01',notes:''}}};assert.throws(()=>vm.runInContext('importChanges(bad)',context),/no válidos/);assert.deepEqual([...storage.entries()],before);
+context.bad={version:1,courseId:'wrong-course',overrides:{}};assert.throws(()=>vm.runInContext('importChanges(bad)',context),/este curso/);assert.deepEqual([...storage.entries()],before);
+context.bad={version:1,courseId:fixture.courseId,overrides:{unknown:{status:'done',start:'2026-10-13',end:'2026-10-20',notes:''}}};assert.throws(()=>vm.runInContext('importChanges(bad)',context),/desconocida/);
+context.bad={version:1,courseId:fixture.courseId,overrides:{[id]:{status:'done',start:'2026-10-13',end:'2026-10-20',notes:'x'.repeat(5001)}}};assert.throws(()=>vm.runInContext('importChanges(bad)',context),/no válidos/);
+context.good={version:1,courseId:fixture.courseId,overrides:{[id]:{status:'blocked',start:'2026-10-13',end:'2026-10-20',notes:'Review'}}};vm.runInContext('importChanges(good)',context);assert.equal(vm.runInContext('allTasks().find(t=>t.id===id).notes',context),'Review');
+el('showAll').onclick();vm.runInContext('setView("kanban")',context);assert.equal(el('taskList').hidden,true);vm.runInContext('showTask(id)',context);assert.equal(el('taskList').hidden,false);
+({context,el}=boot());await new Promise(setImmediate);assert.equal(vm.runInContext('unlocked',context),false);context.id=id;assert.equal(vm.runInContext('allTasks().find(t=>t.id===id).status',context),'blocked');assert.equal(vm.runInContext('allTasks().find(t=>t.id===id).notes',context),'Review');
+assert.equal(el('import').disabled,true);
+console.log(`Passed ${fixture.tasks.length} tasks: shared views, unlock, status/date/note preservation, original dates, global next milestone, atomic imports and locked reload.`);
+})().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,31 +1,29 @@
 # Music Study Planner
 
-Página estática de Gantt, tareas, instrucciones y recursos para organizar el estudio. Incluye un ejemplo ficticio; el repositorio público no incorpora materiales docentes, datos del curso ni progreso personal.
+Panel estático reutilizable con Lista, Kanban, Gantt, búsqueda, filtros, estados directos y edición de fechas/notas. Diseño compartido con el panel de referencia; HTML, CSS y JavaScript sin compilación.
 
-## Uso
+## Uso local
 
-Abrir `index.html` o visitar la página una vez publicado GitHub Pages. Seleccionar **Cargar plan (.json)** y elegir el `plan.json` del repositorio privado de tu curso. El archivo se procesa en el navegador, sin enviarlo a GitHub ni a otro servidor.
+Ejecutar `python3 -m http.server 8000 --bind 127.0.0.1 --directory docs` y abrir http://127.0.0.1:8000. No usar file://.
 
-Las tareas incluyen fechas, periodos propuestos, instrucciones, dependencias y enlaces web. Los enlaces a materiales locales no se publican en esta interfaz. El progreso se conserva por curso en el navegador. **Exportar plan y progreso** permite transferirlo a otro dispositivo; no hay sincronización automática.
+## Publicación
 
-## Publicar con GitHub Pages
+GitHub Pages: Settings → Pages → Deploy from a branch → main → /docs. El acceso desde la raíz también redirige a docs/, por compatibilidad con la configuración anterior.
 
-En GitHub: **Settings → Pages → Source: Deploy from a branch → main → /(root) → Save**.
+## Datos y cambios
 
-URL esperada una vez activada: https://manueleco.github.io/music-study-planner/
+El ejemplo inicial contiene cuatro tareas ficticias. Para elegir otro curso, desbloquear con la clave de `ACCESS.local.txt` de este repo y cargar su `docs/data.json`. Se procesa y recuerda en el navegador, y la edición vuelve a bloquearse tras cargarlo. Los datos no se envían a un servidor. Los originales del curso permanecen fuera del repo público.
 
-La subida del código no garantiza que Pages esté activado; revisar la configuración y la URL que muestre GitHub. El sitio se puede publicar sin instalar dependencias ni compilar.
+Los cambios se guardan por ID de curso y edición académica. Exportar/importar cambios permite trasladar estado, fechas y notas; recargar bloquea la edición sin perderlos. Se valida el ID de curso, versión, tareas, estados, fechas y notas. No hay sincronización automática ni escritura en Moodle o GitHub.
 
-## Formato del plan
+La clave local evita cambios casuales, pero no autentica usuarios ni oculta el contenido del sitio. `docs/config.js` solo contiene su hash. No publicar `ACCESS.local.txt`, materiales privados ni exports personales.
 
-El archivo necesita `course` y `tasks`. Cada tarea necesita `id`, `title`, `start` y `end`; fechas en formato ISO `YYYY-MM-DD`. Campos opcionales: `group`, `deadline`, `kind`, `action`, `instructions`, `original`, `instructionNote`, `where`, `materials`, `depends`, `hours` y `state`. `resources` enlaza cada recurso con su `section`.
+## Archivos
 
-El plan del curso vive en [upf-mpc-2026](https://github.com/manueleco/upf-mpc-2026). El trabajo en grupo se gestionará en su propio repositorio.
+- docs/index.html, tokens.css, style.css y app.js: interfaz.
+- docs/data.json: datos y reglas del ejemplo.
+- docs/config.js: hash de clave local.
+- docs/calendar.ics: calendario del ejemplo, sin eventos reales.
+- tests/panel.test.cjs: pruebas sin dependencias; ejecutar `node tests/panel.test.cjs`.
 
-## Estados de tareas
-
-Cada tarea permite elegir **Por hacer**, **En progreso**, **Hecho** o **Por confirmar**, y filtrar por estado. Se guardan localmente en el navegador. Las marcas booleanas de versiones anteriores se interpretan como Hecho/Por hacer. Las tareas con configuración pendiente de confirmar o hitos tentativos empiezan como Por confirmar. El estado no modifica Moodle.
-
-## Mismo plan en local y online
-
-La primera visita muestra cuatro tareas ficticias. Carga el `plan.json` del curso una vez: el navegador recuerda el plan y lo recupera en visitas posteriores. **Mostrar todas las tareas** elimina los filtros de grupo, estado y pendientes; el contador indica cuántas tareas están visibles. La página local usa la misma interfaz, con el plan completo incorporado y acceso a los archivos locales.
+Los repositorios de cada curso contienen su análisis, calendario, CSV y materiales locales; el proyecto de grupo tiene un repositorio distinto.
