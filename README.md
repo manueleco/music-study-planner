@@ -4,7 +4,9 @@ Panel estático reutilizable con Lista, Kanban, Gantt, búsqueda, filtros, estad
 
 ## Uso local
 
-Ejecutar `python3 -m http.server 8000 --bind 127.0.0.1 --directory docs` y abrir http://127.0.0.1:8000. No usar file://.
+Desde la carpeta del repositorio, ejecutar `python3 scripts/serve.py --open`. Usa el puerto 8341 como preferencia, recuerda el elegido en `server.local.json` y busca uno libre si está ocupado. También admite `--port 8401`. Abrir la URL que indique; no usar file://.
+
+Los estados pertenecen a la URL del navegador. Si cambia el puerto, trasladarlos con Exportar / Importar cambios desde la URL anterior.
 
 ## Publicación
 
