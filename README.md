@@ -27,3 +27,5 @@ La clave local evita cambios casuales, pero no autentica usuarios ni oculta el c
 - tests/panel.test.cjs: pruebas sin dependencias; ejecutar `node tests/panel.test.cjs`.
 
 Los repositorios de cada curso contienen su análisis, calendario, CSV y materiales locales; el proyecto de grupo tiene un repositorio distinto.
+
+Para regenerar la clave en otra máquina, ejecutar `python3 scripts/set_edit_key.py`. Introducirla en el prompt; no se escribe en el historial del shell. Para la web publicada, el nuevo hash de docs/config.js debe subirse y desplegarse antes de usar esa clave. La clave en texto queda solo en ACCESS.local.txt.

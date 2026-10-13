@@ -28,5 +28,8 @@ context.good={version:1,courseId:fixture.courseId,overrides:{[id]:{status:'block
 el('showAll').onclick();vm.runInContext('setView("kanban")',context);assert.equal(el('taskList').hidden,true);vm.runInContext('showTask(id)',context);assert.equal(el('taskList').hidden,false);
 ({context,el}=boot());await new Promise(setImmediate);assert.equal(vm.runInContext('unlocked',context),false);context.id=id;assert.equal(vm.runInContext('allTasks().find(t=>t.id===id).status',context),'blocked');assert.equal(vm.runInContext('allTasks().find(t=>t.id===id).notes',context),'Review');
 assert.equal(el('import').disabled,true);
+context.legacy={course:'Music Perception and Cognition 2026-30965-T1',reviewed:'2026-10-12',resources:[],tasks:[{id:'legacy-1',title:'Legacy task',start:'2026-10-13',end:'2026-10-15',deadline:'2026-10-15',kind:'Hito publicado',group:'Estudio',action:'Read',materials:[],where:'https://example.org/course',depends:'',state:'Pendiente'}]};
+assert.equal(vm.runInContext('legacyCourse(legacy).tasks.length',context),1);
+assert.equal(vm.runInContext('legacyCourse(legacy).courseId',context),'upf-30965-2026-2027');
 console.log(`Passed ${fixture.tasks.length} tasks: shared views, unlock, status/date/note preservation, original dates, global next milestone, atomic imports and locked reload.`);
 })().catch(e=>{console.error(e);process.exitCode=1});
